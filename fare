@@ -1,0 +1,69 @@
+/*Author:Priscilla
+Reg:BSE-01-0051/2024
+Description:program to calculate total fare a passanger has to pay 
+*/
+
+#include <iostream>
+#include <cmath>  // For std::ceil()
+
+using namespace std;
+
+// Function to calculate the cab fare
+double calculateFare(double distance, int passengers, bool airportTrip) {
+    const double baseFarePerMile = 1.80;
+    const double minFare = 5.00;
+    const double firstExtraPassengerCharge = 1.00;
+    const double additionalPassengerCharge = 0.50;
+    const double airportSurcharge = 2.00;
+    
+    // Calculate the base fare for distance traveled
+    double baseFare = distance * baseFarePerMile;
+    
+    // If there's more than 1 passenger, apply extra passenger charges
+    double passengerFare = 0.0;
+    if (passengers > 1) {
+        // First additional passenger charge
+        passengerFare += firstExtraPassengerCharge;
+        // Charge for each additional passenger beyond the second
+        passengerFare += (passengers - 2) * additionalPassengerCharge;
+    }
+
+    // Add airport surcharge if applicable
+    double totalFare = baseFare + passengerFare;
+    if (airportTrip) {
+        totalFare += airportSurcharge;
+    }
+
+    // Ensure minimum fare is met
+    totalFare = std::ceil(totalFare);  // Round up to nearest whole number
+    if (totalFare < minFare) {
+        totalFare = minFare;
+    }
+
+    return totalFare;
+}
+
+// Main function to interact with the user
+int main() {
+    double distance;
+    int passengers;
+    char airportInput;
+    bool airportTrip;
+
+    // Prompt the user for input
+    cout << "Enter distance traveled (in miles, up to one decimal point): ";
+    cin >> distance;
+
+    cout << "Enter the number of passengers: ";
+    cin >> passengers;
+
+    cout << "Is the trip to/from the airport? (Y/N): ";
+    cin >> airportInput;
+    airportTrip = (airportInput == 'Y' || airportInput == 'y');
+
+    // Calculate and display the total fare
+    double fare = calculateFare(distance, passengers, airportTrip);
+    cout << "Total fare: $" << fare << endl;
+
+    return 0;
+}
